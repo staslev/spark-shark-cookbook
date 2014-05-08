@@ -7,7 +7,7 @@ This cookbook installs the following 3 components:
 2.  [Spark][2]
 3.  [Shark][3]
 
-The Spark master and worker start up scripts are installed as Linux services ( *spark-master* and *spark-worker* ).  
+The Spark master and worker start up scripts are installed as Linux services (*spark-master* and *spark-worker*).  
 Shark is installed as a standalone application on both master and worker nodes.  
 Scala is, well, a cool programming language.
 
