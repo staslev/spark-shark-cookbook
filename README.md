@@ -23,9 +23,9 @@ Available Packages
 
 This cookbook assumes you have defined a repository available to Chef, and made the following packages available for installation by chef recipes:
 
-* <code>spark-0.9.1-hadoop-cdh4.2.0</code>
-* <code>shark-0.9.1-hadoop-cdh4.2.0</code>
-* <code>scala-2.10.4</code>
+* <code>spark</code> version <code>0.9.1-1</code>
+* <code>shark</code> same as the Spark version (default is <code>0.9.1-1</code>)
+* <code>scala</code> version <code>2.10.4-1</code>
 
 You can build these packages by using the [fpm tool][5]:
 
