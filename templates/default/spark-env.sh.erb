@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+export SCALA_HOME=<%= node[:scala][:home] %>
+export SPARK_WORKER_MEMORY=<%= node[:spark][:worker_mem] %>
+export SPARK_MASTER_PORT=<%= node[:spark][:master_port] %>
+export SPARK_IDENT_STRING=<%= node[:spark][:ident_user] %>

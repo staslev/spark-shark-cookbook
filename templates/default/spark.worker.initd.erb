@@ -1,0 +1,92 @@
+#!/bin/bash
+
+APP_NAME=$(echo $0 | cut -d"/" -f4)
+
+LOG_FOLDER_BASE=/var/log/spark
+LOG_FILENAME=${LOG_FOLDER}/${APP_NAME}.out
+
+START_SCRIPT="<%= node[:spark][:home] %>/sbin/start-slave.sh 1 <%= node[:spark][:master_uri] %>"
+STOP_SCRIPT="<%= node[:spark][:home] %>/sbin/stop-slaves.sh 1 <%= node[:spark][:master_uri] %>"
+APP_PID_FILE=/tmp/spark-root-org.apache.spark.deploy.worker.Worker-1.pid
+export APP_PID_FILE
+
+log() {
+	echo $1
+	echo $1 >> ${LOG_FILENAME}
+}
+
+# the current directory
+CDIR=$(pwd)
+
+# start
+function start() {	
+	log "Starting ${APP_NAME}..."
+    touch $APP_PID_FILE
+    chown ${RUNAS_USER}:${RUNAS_USER} ${APP_PID_FILE}
+	# check if we're already running. exit code 1 means OK (not running)
+	STATUS=$(status >/dev/null)
+	R=$?
+	if [ $R -eq 0 ]; then	# NOT OK. should be 1
+		log "${APP_NAME} is already running. exiting."
+		return 1
+	fi
+	
+	${START_SCRIPT} >> ${LOG_FILENAME} 2>&1
+	RETVAL=$?
+	cd ${CDIR}
+	return $RETVAL
+}
+
+# status
+# returns 0 if running, 1 if not
+function status() {
+  RETVAL=1
+  if [ -s ${APP_PID_FILE} ]; then
+    read kpid < ${APP_PID_FILE}
+    if [ -d "/proc/$kpid" ]; then
+      echo "${APP_NAME} is running (${kpid})"
+      RETVAL=0
+    else
+      echo "lock file found but no process running for pid $kpid"
+    fi
+  else
+      echo "${APP_NAME} is stopped"
+  fi
+  return $RETVAL
+}
+
+# stop
+function stop() {
+	log "Stopping ${APP_NAME}"
+	
+	if status >/dev/null; then  # is running
+		${STOP_SCRIPT} >> ${LOG_FILENAME} 2>&1
+		RETVAL=$?
+        rm ${APP_PID_FILE}
+		return $RETVAL
+	else    # is not running
+		log "${APP_NAME} is not running. Exiting."
+		return 2
+	fi
+
+}
+
+# let's see how we were called
+case "$1" in
+	start)	
+		start
+		;;
+	stop)
+		stop
+		;;
+	status)
+		status
+		;;
+	restart)
+		stop
+		start
+		;;
+	*)
+		echo "Usage: $0 [ start | stop | status | restart ]"
+		;;
+esac

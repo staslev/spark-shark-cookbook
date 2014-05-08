@@ -1,0 +1,1 @@
+default[:hadoop][:home] = '/usr/lib/hadoop'
