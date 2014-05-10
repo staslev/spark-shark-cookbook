@@ -47,7 +47,7 @@ Note that nodes where Shark is planned to be used **MUST** have Jdk 1.7 (wheres 
 
 * Hadoop  
 
-  This cookbook assumes you're installing **Spark along side Hadoop** (i.e., you have a local Hadoop installation on each Spark node).
+  This cookbook assumes you're installing **Spark along side Hadoop** (i.e., you have a local Hadoop installation on each Spark node). The default version in this cookbook is cdh4.2.0.
 
 Hive Configuration File (hive-site.xml)
 --------------------------------------
