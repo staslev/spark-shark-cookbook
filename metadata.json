@@ -1,0 +1,6 @@
+{
+	"name": "spark-shark-cookbook",
+	"version": 0.1,
+	"description": "Installs and configures Apache Spark and Shark",
+    "license": "MIT"
+}
